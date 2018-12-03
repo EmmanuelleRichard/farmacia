@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 FILE* OpenFile(char modo, char caminho[30]){
     FILE *arq;
@@ -25,10 +26,10 @@ void CloseFile(FILE *arq){
     fclose(arq);
 }
 
-void Cadastra(char nome[30], int preco){
+void Cadastra(char nome[30], int preco, char validade[30]){
     FILE *arq;
     arq = OpenFile('a', "farmacia.txt");
-    fprintf(arq, "%s %d\n", nome, preco);
+    fprintf(arq, "%s %d %s\n", nome, preco, validade);
     CloseFile(arq);
 }
 
@@ -36,26 +37,33 @@ void Listar(){
     FILE *arq;
     char nome[30];
     int preco;
+    char validade[30];
 
     arq = OpenFile('l',"farmacia.txt");
 
     while(!feof(arq)){
-        fscanf(arq,"%s %d ", &nome, &preco);
-        printf("Nome: %s  -  Preco: %d R$\n", nome, preco);
+        fscanf(arq,"%s %d %s", &nome, &preco, &validade);
+        printf("Nome: %s  -  Preco: %d R$  -  Validade: %s\n", nome, preco, validade);
     }
     CloseFile(arq);
 }
 
 int main(){
+
+    char senha[4];
+    char senhaGerente[] = "1111";
+    char senhaFuncionario[] = "2222";
+
     int opcao;
     char nome[30];
     int preco;
+    char validade[30];
     do{
         system("cls");
         printf("\n\n\t\tBem Vindo ao programa da Farmacia\n");
         printf("\nMENU");
-        printf("\n 1 - Registrar Produto");
-        printf("\n 2 - Listar de Produtos");
+        printf("\n 1 - Registrar Medicamentos - Gerente/Funcionario");
+        printf("\n 2 - Area do Cliente");
         printf("\n 3 - Sair");
 
         printf("\nDigite uma opcao: ");
@@ -64,14 +72,40 @@ int main(){
 
         switch(opcao){
             case 1:
-                printf("\nDigite o nome: ");
-                setbuf(stdin,NULL);
-                gets(nome);
-                printf("\nDigite o Preco: ");
-                scanf("%d", &preco);
-                Cadastra(nome, preco);
-                system("pause");
-                break;
+                printf("Digite sua senha: ");
+                scanf("%s", &senha);
+
+                if (strcmp(senha, senhaGerente) == 0) {
+                    printf("\n\nOla Gerente. Seja Bem Vindo!\n\n");
+                    printf("\nDigite o nome: ");
+                    scanf("%s", &nome);
+                    printf("\nDigite o Preco: ");
+                    scanf("%d", &preco);
+                    printf("\nDigite o Validade no formato 'dd/mm/aaaa': ");
+                    scanf("%s", &validade);
+                    Cadastra(nome, preco, validade);
+                    system("pause");
+                    break;
+                    }
+
+                else if (strcmp(senha, senhaFuncionario) == 0) {
+                    printf("\n\nOla, Funcionario. Seja Bem Vindo!\n\n");
+                    printf("\nDigite o nome: ");
+                    scanf("%s", &nome);
+                    printf("\nDigite o Preco: ");
+                    scanf("%d", &preco);
+                    printf("\nDigite o Validade no formato 'dd/mm/aaaa': ");
+                    scanf("%s", &validade);
+                    Cadastra(nome, preco, validade);
+                    system("pause");
+                    break;
+                    }
+
+                else {
+                    printf("\nAcesso negado!");
+                    system("pause");
+                    break;
+                    }
             case 2:
                 Listar();
                 system("pause");
@@ -87,7 +121,9 @@ int main(){
                 system("pause");
 
         }
-    }while(opcao!=3);
+    }
+
+    while(opcao!=3);
 
     return 0;
 }
