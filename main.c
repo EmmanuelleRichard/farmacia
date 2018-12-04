@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+#include <conio.h>
 
 FILE* OpenFile(char modo, char caminho[30]){
     FILE *arq;
@@ -29,7 +31,7 @@ void CloseFile(FILE *arq){
 void Cadastra(char nome[30], int preco, char validade[30]){
     FILE *arq;
     arq = OpenFile('a', "farmacia.txt");
-    fprintf(arq, "%s %d %s\n", nome, preco, validade);
+    fprintf(arq, "%s\n %d\n %s\n\n", nome, preco, validade);
     CloseFile(arq);
 }
 
@@ -48,12 +50,30 @@ void Listar(){
     CloseFile(arq);
 }
 
+void consultar(){
+    char nome[30];
+    int preco;
+    char pesq[30];
+    FILE *arq;
+    arq = OpenFile('l',"farmacia.txt");
+
+    printf("\nDigite o nome do medicamento: ");
+    scanf("%s", &pesq);
+    while(fscanf(arq, "%s\n %d\n", nome, &preco) != EOF)
+{
+	if(strcmp(nome, pesq) == 0)
+	{
+		printf("%s\n %d\n", nome, preco);
+	}
+}
+    CloseFile(arq);
+ }
+
 int main(){
 
     char senha[4];
     char senhaGerente[] = "1111";
     char senhaFuncionario[] = "2222";
-
     int opcao;
     char nome[30];
     int preco;
@@ -75,28 +95,22 @@ int main(){
                 printf("Digite sua senha: ");
                 scanf("%s", &senha);
 
-                if (strcmp(senha, senhaGerente) == 0) {
-                    printf("\n\nOla Gerente. Seja Bem Vindo!\n\n");
-                    printf("\nDigite o nome: ");
-                    scanf("%s", &nome);
-                    printf("\nDigite o Preco: ");
-                    scanf("%d", &preco);
-                    printf("\nDigite o Validade no formato 'dd/mm/aaaa': ");
-                    scanf("%s", &validade);
-                    Cadastra(nome, preco, validade);
-                    system("pause");
-                    break;
-                    }
+                if (strcmp(senha, senhaGerente) == 0 || strcmp(senha, senhaFuncionario) == 0) {
+                    printf("\n\nOla. Seja Bem Vindo!\n\n");
+                    int i;
+                    int quant;
+                    printf("Quantos cadastros deseja fazer ? ");
+                    scanf("%d",&quant);
 
-                else if (strcmp(senha, senhaFuncionario) == 0) {
-                    printf("\n\nOla, Funcionario. Seja Bem Vindo!\n\n");
-                    printf("\nDigite o nome: ");
+                    for(i=0;i<quant;i++){
+                    printf("\nDigite o nome do medicamento: ");
                     scanf("%s", &nome);
                     printf("\nDigite o Preco: ");
                     scanf("%d", &preco);
                     printf("\nDigite o Validade no formato 'dd/mm/aaaa': ");
                     scanf("%s", &validade);
                     Cadastra(nome, preco, validade);
+                    }
                     system("pause");
                     break;
                     }
@@ -108,6 +122,7 @@ int main(){
                     }
             case 2:
                 Listar();
+                consultar();
                 system("pause");
                 break;
             case 3:
