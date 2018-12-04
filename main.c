@@ -4,12 +4,13 @@
 #include <string.h>
 #include <conio.h>
 
+FILE *arq;
+char nome[30];
+int preco;
+char validade[30];
+
 FILE* OpenFile(char modo, char caminho[30]){
-    FILE *arq;
     switch(modo){
-        case 'g':
-            arq = fopen(caminho,"wt");
-            break;
         case 'l':
             arq = fopen(caminho,"rt");
             break;
@@ -29,45 +30,33 @@ void CloseFile(FILE *arq){
 }
 
 void Cadastra(char nome[30], int preco, char validade[30]){
-    FILE *arq;
     arq = OpenFile('a', "farmacia.txt");
     fprintf(arq, "%s\n %d\n %s\n\n", nome, preco, validade);
     CloseFile(arq);
 }
 
 void Listar(){
-    FILE *arq;
-    char nome[30];
-    int preco;
-    char validade[30];
-
     arq = OpenFile('l',"farmacia.txt");
-
     while(!feof(arq)){
-        fscanf(arq,"%s %d %s", &nome, &preco, &validade);
+        fscanf(arq,"%s %d %s ", &nome, &preco, &validade);
         printf("Nome: %s  -  Preco: %d R$  -  Validade: %s\n", nome, preco, validade);
     }
     CloseFile(arq);
 }
 
 void consultar(){
-    char nome[30];
-    int preco;
     char pesq[30];
-    FILE *arq;
-    arq = OpenFile('l',"farmacia.txt");
 
+    arq = OpenFile('l',"farmacia.txt");
     printf("\nDigite o nome do medicamento: ");
     scanf("%s", &pesq);
-    while(fscanf(arq, "%s\n %d\n", nome, &preco) != EOF)
-{
-	if(strcmp(nome, pesq) == 0)
-	{
+    while(fscanf(arq, "%s\n %d\n", nome, &preco) != EOF){
+	if(strcmp(nome, pesq) == 0){
 		printf("%s\n %d\n", nome, preco);
-	}
-}
+        }
+    }
     CloseFile(arq);
- }
+}
 
 int main(){
 
@@ -75,9 +64,7 @@ int main(){
     char senhaGerente[] = "1111";
     char senhaFuncionario[] = "2222";
     int opcao;
-    char nome[30];
-    int preco;
-    char validade[30];
+
     do{
         system("cls");
         printf("\n\n\t\tBem Vindo ao programa da Farmacia\n");
