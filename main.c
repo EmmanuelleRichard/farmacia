@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
-#include <conio.h>
+#include <locale.h>
 
 FILE *arq;
 char nome[30];
@@ -19,7 +17,7 @@ FILE* OpenFile(char modo, char caminho[30]){
             break;
     }
     if(arq==NULL){
-        printf("Nao foi possivel abrir o arq");
+        printf("Nao foi possivel abrir o arquivo");
         exit(0);
     }
     return arq;
@@ -39,22 +37,24 @@ void Listar(){
     arq = OpenFile('l',"farmacia.txt");
     while(!feof(arq)){
         fscanf(arq,"%s %d %s ", &nome, &preco, &validade);
-        printf("Nome: %s  -  Preco: %d R$  -  Validade: %s\n", nome, preco, validade);
+        printf("Nome: %s  -  Preço: %d R$  -  Validade: %s\n", nome, preco, validade);
     }
     CloseFile(arq);
 }
 
 void consultar(){
     char pesq[30];
+    int i;
+    int quant;
 
     arq = OpenFile('l',"farmacia.txt");
     printf("\nDigite o nome do medicamento: ");
     scanf("%s", &pesq);
     while(fscanf(arq, "%s\n %d\n", nome, &preco) != EOF){
-	if(strcmp(nome, pesq) == 0){
-		printf("%s\n %d\n", nome, preco);
+        if(strcmp(nome, pesq) == 0){
+        printf("Medicamento: %s\nPreço: %dR$\n", nome, preco);
+            }
         }
-    }
     CloseFile(arq);
 }
 
@@ -64,16 +64,16 @@ int main(){
     char senhaGerente[] = "1111";
     char senhaFuncionario[] = "2222";
     int opcao;
-
+    setlocale(LC_ALL, "Portuguese");
     do{
         system("cls");
-        printf("\n\n\t\tBem Vindo ao programa da Farmacia\n");
+        printf("\n\n\t\tBem Vindo ao programa da Farmácia\n");
         printf("\nMENU");
-        printf("\n 1 - Registrar Medicamentos - Gerente/Funcionario");
+        printf("\n 1 - Registrar Medicamentos - Gerente/Funcionário");
         printf("\n 2 - Area do Cliente");
         printf("\n 3 - Sair");
 
-        printf("\nDigite uma opcao: ");
+        printf("\nDigite uma opção: ");
         scanf("%d", &opcao);
         system("cls");
 
@@ -92,7 +92,7 @@ int main(){
                     for(i=0;i<quant;i++){
                     printf("\nDigite o nome do medicamento: ");
                     scanf("%s", &nome);
-                    printf("\nDigite o Preco: ");
+                    printf("\nDigite o Preço: ");
                     scanf("%d", &preco);
                     printf("\nDigite o Validade no formato 'dd/mm/aaaa': ");
                     scanf("%s", &validade);
